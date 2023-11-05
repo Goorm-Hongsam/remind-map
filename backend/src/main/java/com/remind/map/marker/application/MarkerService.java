@@ -48,6 +48,12 @@ public class MarkerService {
         return convertMarkersToDTOs(markers);
     }
 
+    public MarkerResponse findMarker(final Long markerId) {
+        Marker marker = markerRepository.getById(markerId);
+
+        return marker.toResponse();
+    }
+
     public List<Marker> searchMarkersWithinBounds(Location northEast, Location southWest) {
         String pointFormat = String.format(
                 "'LINESTRING(%f %f, %f %f)'",
@@ -90,4 +96,6 @@ public class MarkerService {
         Marker marker = markerRepository.getById(id);
         markerRepository.delete(marker);
     }
+
+
 }

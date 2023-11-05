@@ -38,4 +38,10 @@ public class MarkerController {
         markerService.delete(markerId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/marker/{markerId}")
+    public ResponseEntity<MarkerResponse> findMarker(@PathVariable final Long markerId) {
+        MarkerResponse response = markerService.findMarker(markerId);
+        return ResponseEntity.ok().body(response);
+    }
 }
