@@ -2,6 +2,7 @@ package com.remind.map.markerRoute.application;
 
 import com.remind.map.marker.domain.Marker;
 import com.remind.map.marker.domain.MarkerRepository;
+import com.remind.map.marker.dto.response.MarkerResponse;
 import com.remind.map.marker.exception.NoSuchMarkerException;
 import com.remind.map.markerRoute.domain.MarkerRoute;
 import com.remind.map.markerRoute.domain.MarkerRouteRepository;
@@ -50,6 +51,14 @@ public class MarkerRouteService {
         markerRoutes.forEach(markerRoute -> responses.add(new MarkerRouteCreateResponse(markerRoute.getId())));
 
         return responses;
+    }
+
+    public List<MarkerResponse> findMarkersByRoute(Route route) {
+        List<MarkerRoute> markerRoutes = markerRouteRepository.findByRoute(route);
+        return markerRoutes.stream()
+                .map(MarkerRoute::getMarker)
+                .map(Marker::toResponse)
+                .collect(Collectors.toList());
     }
 
 }

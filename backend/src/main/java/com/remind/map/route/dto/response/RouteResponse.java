@@ -10,31 +10,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RouteResponse {
     private Long id;
     private String title;
-    private Location location;
     private LocalDateTime wentDate;
     private String memo;
+    private List<MarkerResponse> markers;
 
     @Builder
-    public RouteResponse(Long id, String title, Location location, String memo, LocalDateTime wentDate) {
+    public RouteResponse(Long id, String title, String memo, LocalDateTime wentDate, List<MarkerResponse> markers) {
         this.id = id;
         this.title = title;
-        this.location = location;
         this.memo = memo;
         this.wentDate = wentDate;
+        this.markers = markers;
     }
 
-    public static RouteResponse fromEntity(Route route) {
+    public static RouteResponse fromEntity(Route route, List<MarkerResponse> markers) {
         return RouteResponse.builder()
                 .id(route.getId())
                 .title(route.getTitle())
                 .wentDate(route.getWentDate())
                 .memo(route.getMemo().getValue())
+                .markers(markers)
                 .build();
     }
 }

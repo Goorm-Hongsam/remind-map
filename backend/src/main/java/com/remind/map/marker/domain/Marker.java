@@ -1,5 +1,6 @@
 package com.remind.map.marker.domain;
 
+import com.remind.map.marker.dto.response.MarkerResponse;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.locationtech.jts.geom.Point;
@@ -42,5 +43,14 @@ public class Marker {
         this.location = location;
         this.point = point;
         this.wentDate = wentDate;
+    }
+
+    public MarkerResponse toResponse() {
+        return MarkerResponse.builder()
+                .id(this.id)
+                .title(this.title)
+                .location(this.location)
+                .wentDate(this.wentDate)
+                .build();
     }
 }
