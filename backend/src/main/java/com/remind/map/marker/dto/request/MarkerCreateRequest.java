@@ -21,6 +21,9 @@ public class MarkerCreateRequest {
     @NotBlank(message = "공백일 수는 없습니다.")
     private String title;
 
+    @NotBlank(message = "내용이 공백일 수 없습니다.")
+    private String memo;
+
     private Location location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -29,6 +32,7 @@ public class MarkerCreateRequest {
     public Marker toEntity(Point point) {
         return Marker.builder()
                 .title(title)
+                .memo(memo)
                 .location(location)
                 .wentDate(wentDate)
                 .point(point)

@@ -15,13 +15,15 @@ public class MarkerResponse {
 
     private Long id;
     private String title;
+    private String memo;
     private Location location;
     private LocalDateTime wentDate;
 
     @Builder
-    public MarkerResponse(Long id, String title, Location location, LocalDateTime wentDate) {
+    public MarkerResponse(Long id, String title, String memo, Location location, LocalDateTime wentDate) {
         this.id = id;
         this.title = title;
+        this.memo = memo;
         this.location = location;
         this.wentDate = wentDate;
     }
@@ -30,6 +32,7 @@ public class MarkerResponse {
         return MarkerResponse.builder()
                 .id(marker.getId())
                 .title(marker.getTitle())
+                .memo(marker.getMemo())
                 .wentDate(marker.getWentDate())
                 .location(marker.getLocation())
                 .build();

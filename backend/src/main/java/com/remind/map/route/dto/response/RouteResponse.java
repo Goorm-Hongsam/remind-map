@@ -35,7 +35,7 @@ public class RouteResponse {
                 .id(route.getId())
                 .title(route.getTitle())
                 .wentDate(route.getWentDate())
-                .memo(route.getMemo().getValue())
+                .memo(route.getMemo())
                 .markers(markers)
                 .build();
     }

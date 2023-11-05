@@ -20,6 +20,8 @@ public class Marker {
 
     private String title;
 
+    private String memo;
+
     @Embedded
     private Location location;
 
@@ -37,9 +39,10 @@ public class Marker {
     private LocalDateTime wentDate;
 
     @Builder
-    public Marker(Long id, String title, Location location, Point point, LocalDateTime wentDate) {
+    public Marker(Long id, String title, String memo, Location location, Point point, LocalDateTime wentDate) {
         this.id = id;
         this.title = title;
+        this.memo = memo;
         this.location = location;
         this.point = point;
         this.wentDate = wentDate;
@@ -49,6 +52,7 @@ public class Marker {
         return MarkerResponse.builder()
                 .id(this.id)
                 .title(this.title)
+                .memo(this.memo)
                 .location(this.location)
                 .wentDate(this.wentDate)
                 .build();

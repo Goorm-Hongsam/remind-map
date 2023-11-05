@@ -19,7 +19,7 @@ public class Route {
     private String title;
 
     @Column
-    private Memo memo;
+    private String memo;
 
     @Column(nullable = false)
     private boolean visiable;
@@ -32,7 +32,7 @@ public class Route {
     private LocalDateTime wentDate;
 
     @Builder
-    public Route(String title, Memo memo, boolean visiable, int view, LocalDateTime wentDate) {
+    public Route(String title, String memo, boolean visiable, int view, LocalDateTime wentDate) {
         this.title = title;
         this.memo = memo;
         this.visiable = visiable;

@@ -2,7 +2,6 @@ package com.remind.map.markerRoute.dto.request;
 
 import com.remind.map.marker.domain.Marker;
 import com.remind.map.markerRoute.domain.MarkerRoute;
-import com.remind.map.route.domain.Memo;
 import com.remind.map.route.domain.Route;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -50,7 +49,7 @@ public class MarkerRouteCreateRequest {
     public Route toRoute() {
         return Route.builder()
                 .title(title)
-                .memo(new Memo(memo))
+                .memo(memo)
                 .visiable(visiable)
                 .view(0)
                 .wentDate(wentDate)

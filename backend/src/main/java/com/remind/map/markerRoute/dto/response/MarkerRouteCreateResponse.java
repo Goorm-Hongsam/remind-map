@@ -12,7 +12,6 @@ public class MarkerRouteCreateResponse {
     private Long id;
 
     @Builder
-
     public MarkerRouteCreateResponse(Long id) {
         this.id = id;
     }
