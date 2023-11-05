@@ -10,11 +10,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MarkerRouteCreateRequest {
+
+    @NotNull(message = "markerId 목록이 null일 수 없습니다.")
+    private List<Long> markerIds;
 
     @NotBlank(message = "제목이 공백일 수 없습니다.")
     private String title;
@@ -24,16 +29,14 @@ public class MarkerRouteCreateRequest {
 
     private boolean visiable;
 
-    private int view;
-
     private LocalDateTime wentDate;
 
     @Builder
-    public MarkerRouteCreateRequest(String title, String memo, boolean visiable, int view, LocalDateTime wentDate) {
+    public MarkerRouteCreateRequest(List<Long> markerIds, String title, String memo, boolean visiable, LocalDateTime wentDate) {
+        this.markerIds = markerIds;
         this.title = title;
         this.memo = memo;
         this.visiable = visiable;
-        this.view = view;
         this.wentDate = wentDate;
     }
 
@@ -49,7 +52,7 @@ public class MarkerRouteCreateRequest {
                 .title(title)
                 .memo(new Memo(memo))
                 .visiable(visiable)
-                .view(view)
+                .view(0)
                 .wentDate(wentDate)
                 .build();
     }

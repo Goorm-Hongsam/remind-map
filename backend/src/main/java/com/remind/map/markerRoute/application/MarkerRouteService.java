@@ -2,6 +2,7 @@ package com.remind.map.markerRoute.application;
 
 import com.remind.map.marker.domain.Marker;
 import com.remind.map.marker.domain.MarkerRepository;
+import com.remind.map.marker.exception.NoSuchMarkerException;
 import com.remind.map.markerRoute.domain.MarkerRoute;
 import com.remind.map.markerRoute.domain.MarkerRouteRepository;
 import com.remind.map.markerRoute.dto.request.MarkerRouteCreateRequest;
@@ -11,6 +12,10 @@ import com.remind.map.route.domain.RouteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,15 +27,29 @@ public class MarkerRouteService {
     private final MarkerRouteRepository markerRouteRepository;
 
     @Transactional
-    public MarkerRouteCreateResponse save(final Long markerId, MarkerRouteCreateRequest request){
-        Marker marker = markerRepository.getById(markerId);
+    public List<MarkerRouteCreateResponse> save(final MarkerRouteCreateRequest request) {
+        List<Long> markerIds = request.getMarkerIds();
+        List<MarkerRouteCreateResponse> responses = new ArrayList<>();
+
         Route route = request.toRoute();
-        MarkerRoute markerRoute = request.toMarkerRoute(marker, route);
-
-        markerRepository.save(marker);
         routeRepository.save(route);
-        Long markerRouteId = markerRouteRepository.save(markerRoute).getId();
 
-        return new MarkerRouteCreateResponse(markerRouteId);
+        List<Marker> markers = markerRepository.findAllById(markerIds);
+        markerIds.forEach(id -> {
+            if (markers.stream().noneMatch(marker -> marker.getId().equals(id))) {
+                throw new NoSuchMarkerException();
+            }
+        });
+
+        List<MarkerRoute> markerRoutes = markers.stream()
+                .map(marker -> request.toMarkerRoute(marker, route))
+                .collect(Collectors.toList());
+
+        markerRouteRepository.saveAll(markerRoutes);
+
+        markerRoutes.forEach(markerRoute -> responses.add(new MarkerRouteCreateResponse(markerRoute.getId())));
+
+        return responses;
     }
+
 }
