@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class MarkerRouteCreateResponse {
-
     private Long id;
 
     @Builder
@@ -16,3 +15,4 @@ public class MarkerRouteCreateResponse {
         this.id = id;
     }
 }
+

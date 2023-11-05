@@ -4,6 +4,7 @@ import com.remind.map.marker.dto.request.MarkerCreateRequest;
 import com.remind.map.marker.dto.response.MarkerResponse;
 import com.remind.map.markerRoute.application.MarkerRouteService;
 import com.remind.map.markerRoute.dto.request.MarkerRouteCreateRequest;
+import com.remind.map.markerRoute.dto.response.IntegrativeMarkerRouteCreateResponse;
 import com.remind.map.markerRoute.dto.response.MarkerRouteCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
@@ -22,10 +23,10 @@ public class MarkerRouteController {
     private final MarkerRouteService markerRouteService;
 
     @PostMapping("/marker-route")
-    public ResponseEntity<List<MarkerRouteCreateResponse>> save(
+    public ResponseEntity<IntegrativeMarkerRouteCreateResponse> save(
             @Valid @RequestBody final MarkerRouteCreateRequest request
     ) {
-        List<MarkerRouteCreateResponse> response = markerRouteService.save(request);
+        IntegrativeMarkerRouteCreateResponse response = markerRouteService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

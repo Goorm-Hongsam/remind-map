@@ -7,6 +7,7 @@ import com.remind.map.marker.exception.NoSuchMarkerException;
 import com.remind.map.markerRoute.domain.MarkerRoute;
 import com.remind.map.markerRoute.domain.MarkerRouteRepository;
 import com.remind.map.markerRoute.dto.request.MarkerRouteCreateRequest;
+import com.remind.map.markerRoute.dto.response.IntegrativeMarkerRouteCreateResponse;
 import com.remind.map.markerRoute.dto.response.MarkerRouteCreateResponse;
 import com.remind.map.route.domain.Route;
 import com.remind.map.route.domain.RouteRepository;
@@ -28,7 +29,7 @@ public class MarkerRouteService {
     private final MarkerRouteRepository markerRouteRepository;
 
     @Transactional
-    public List<MarkerRouteCreateResponse> save(final MarkerRouteCreateRequest request) {
+    public IntegrativeMarkerRouteCreateResponse save(final MarkerRouteCreateRequest request) {
         List<Long> markerIds = request.getMarkerIds();
         List<MarkerRouteCreateResponse> responses = new ArrayList<>();
 
@@ -45,12 +46,12 @@ public class MarkerRouteService {
         List<MarkerRoute> markerRoutes = markers.stream()
                 .map(marker -> request.toMarkerRoute(marker, route))
                 .collect(Collectors.toList());
-
         markerRouteRepository.saveAll(markerRoutes);
 
+        Long createdRouteId = route.getId();
         markerRoutes.forEach(markerRoute -> responses.add(new MarkerRouteCreateResponse(markerRoute.getId())));
 
-        return responses;
+        return new IntegrativeMarkerRouteCreateResponse(createdRouteId, responses);
     }
 
     public List<MarkerResponse> findMarkersByRoute(Route route) {
