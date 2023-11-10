@@ -1,24 +1,23 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Main from './common/Main';
+import Header from './common/Header';
+import Sidebar from './common/Sidebar';
+import Redirect from './api/Redirect';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route exact path="/kakao/callback" element={<Redirect />} />
+        </Routes>
+        <Sidebar />
+      </div>
+    </BrowserRouter>
   );
 }
 
