@@ -1,14 +1,18 @@
 package com.remind.map.member.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.remind.map.member.domain.KakaoAccountDto;
+import com.remind.map.member.domain.KakaoUerInfoDto;
 import com.remind.map.member.domain.KakaoTokenDto;
 import com.remind.map.member.domain.Member;
 import com.remind.map.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,12 +23,23 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
+import java.util.Optional;
+
+
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class MemberService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+
+    @Value("${jwt.secret}")
+    private String jwtSecretKey;
+
+    @Value("${kakao.client_id}")
+    private String client_id;
 
     @Transactional
     public KakaoTokenDto getKakaoAccessToken(String code) {
@@ -34,7 +49,7 @@ public class MemberService {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", "e653e7f2cbcedddfe3aa7e9d9a706782"); //
+        params.add("client_id", client_id);
         params.add("redirect_uri", "http://localhost:3000/kakao/callback");
         params.add("code", code);
 //        params.add("client_secret", KAKAO_CLIENT_SECRET); 선택 사항
@@ -63,7 +78,6 @@ public class MemberService {
         return kakaoTokenDto;
     }
 
-
     public Member getMemberInfo(String kakaoAccessToken) {
 
         RestTemplate rt = new RestTemplate();
@@ -85,26 +99,41 @@ public class MemberService {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        KakaoAccountDto kakaoAccountDto = null;
+        KakaoUerInfoDto kakaoUerInfoDto = null;
         try {
-            kakaoAccountDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoAccountDto.class);
+            kakaoUerInfoDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoUerInfoDto.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        Long kakaoId = kakaoAccountDto.getId();
-        Member existOwner = (Member) memberRepository.findMemberById(kakaoId); // 다시
+        Member member = new Member(kakaoUerInfoDto.getId()
+                ,kakaoUerInfoDto.getKakao_account().getProfile().getNickname()
+                ,kakaoUerInfoDto.getKakao_account().getProfile().getThumbnail_image_url());
 
-        if (existOwner != null) {
 
+        Optional<Member> existOwner = memberRepository.findMemberById(member.getMemberId());
+
+        if (existOwner.isEmpty()) {
+            // 회원가입
+            memberRepository.save(member);
         }
-        // 처음 로그인 하는 경우
-        else {
 
-        }
+        return member;
 
-        return existOwner;
+    }
 
+    public String getJwtToken(Member member) {
+
+        log.info("생성 시크릿 키={}",jwtSecretKey);
+
+        String jwtToken = JWT.create()
+                .withExpiresAt(new Date(System.currentTimeMillis() + 120000))
+                .withClaim("id", member.getMemberId())
+                .withClaim("nickname", member.getNickname())
+                .withClaim("thumbnailImageUrl", member.getThumbnailImageUrl())
+                .sign(Algorithm.HMAC512(jwtSecretKey));
+
+        return jwtToken;
     }
 }
 

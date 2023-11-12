@@ -1,10 +1,10 @@
 package com.remind.map.member.domain;
 
 import lombok.Data;
-import lombok.extern.java.Log;
 
 @Data
-public class KakaoAccountDto {
+public class KakaoUerInfoDto {
 
     private Long id;
+    private KaKaoAccount kakao_account;
 }
