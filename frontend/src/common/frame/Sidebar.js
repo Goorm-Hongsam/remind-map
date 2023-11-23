@@ -16,7 +16,7 @@ const OpenBtn = ({ handleSidebarToggle, isSidebarOpen }) => {
   );
 };
 
-const Sidebar = ({ onSearchResults, selectedMarker }) => {
+const Sidebar = ({ onSearchResults, selectedMarker, onEnableMarkerCreation, onPostClick }) => {
   const [selectedTab, setSelectedTab] = useState('검색');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -37,6 +37,8 @@ const Sidebar = ({ onSearchResults, selectedMarker }) => {
             selectedTab={selectedTab}
             onSearchResults={onSearchResults}
             selectedMarker={selectedMarker}
+            onEnableMarkerCreation={onEnableMarkerCreation}
+            onPostClick={onPostClick}
           />
         </div>
         <OpenBtn handleSidebarToggle={handleSidebarToggle} isSidebarOpen={isSidebarOpen} />

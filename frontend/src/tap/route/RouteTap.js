@@ -1,8 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './RouteTap.module.css';
+import { groupMarkers, groups } from './data';
+import Posting from '../../common/userposting/Posting';
+import { RxTriangleLeft } from 'react-icons/rx';
 
 const RouteTap = () => {
-  return <div className={styles.routeTap}>RouteTap</div>;
+  const [curGroup, setCurGroup] = useState(0);
+  const [curGroupId, setCurGroupId] = useState(0);
+  const [isGroups, setIsGroups] = useState(false);
+  const [activeButton, setActiveButton] = useState('');
+  const selectGroup = groupId => {
+    const selectIndex = groups.findIndex(e => {
+      return e.groupId === groupId;
+    });
+    setCurGroup(selectIndex);
+    setCurGroupId(groupId);
+    setIsGroups(false);
+  };
+  const openGroup = () => {
+    setIsGroups(!isGroups);
+  };
+  const handleMarkerCreate = () => {
+    setActiveButton('marker');
+  };
+  const handleRouteCreate = () => {
+    setActiveButton('route');
+  };
+  return (
+    <div className={styles.routeTap}>
+      <div className="w-full flex flex-col items-center justify-center">
+        <p onClick={openGroup} className={`${styles.routeTapItem} border p-2`}>
+          {groups[curGroup].groupTitle}
+        </p>
+        {isGroups ? (
+          <ul className={`${styles.routeTapItem} border`}>
+            {groups.map((group, i) => {
+              return (
+                <li
+                  onClick={() => {
+                    selectGroup(group.groupId);
+                  }}
+                  key={i}
+                  className="p-2 border border-b"
+                >
+                  {group.groupTitle}
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+      </div>
+      <div className="w-full flex flex-col gap-3 items-center justify-center">
+        {groupMarkers.map((marker, i) => {
+          return curGroupId === marker.groupId ? (
+            <Posting
+              key={i}
+              title={marker.title}
+              writer={marker.writer}
+              date={marker.date}
+              fav={marker.fav}
+            />
+          ) : null;
+        })}
+      </div>
+      <div className={styles.buttonContainer}>
+        <button
+          onClick={handleMarkerCreate}
+          className={`${styles.routeMarkerButton} ${
+            activeButton === 'marker' ? styles.activeButton : ''
+          }`}
+        >
+          마커 등록
+        </button>
+        <button
+          onClick={handleRouteCreate}
+          className={`${styles.routeCreateButton} ${
+            activeButton === 'route' ? styles.activeButton : ''
+          }`}
+        >
+          루트 생성
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default RouteTap;

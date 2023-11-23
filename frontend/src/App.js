@@ -10,6 +10,8 @@ import PostingModal from './common/userposting/PostingModal';
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState('');
+  const [enableMarkerCreation, setEnableMarkerCreation] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState('');
 
   return (
     <BrowserRouter>
@@ -20,8 +22,18 @@ function App() {
             path="/"
             element={
               <>
-                <Main searchResults={searchResults} onMarkerSelect={setSelectedMarker} />{' '}
-                <Sidebar onSearchResults={setSearchResults} selectedMarker={selectedMarker} />
+                <Main
+                  searchResults={searchResults}
+                  onMarkerSelect={setSelectedMarker}
+                  enableMarkerCreation={enableMarkerCreation}
+                  selectedLocation={selectedLocation}
+                />{' '}
+                <Sidebar
+                  onSearchResults={setSearchResults}
+                  selectedMarker={selectedMarker}
+                  onEnableMarkerCreation={setEnableMarkerCreation}
+                  onPostClick={setSelectedLocation}
+                />
               </>
             }
           />

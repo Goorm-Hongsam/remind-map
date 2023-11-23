@@ -7,7 +7,13 @@ import GroupTap from '../../tap/group/GroupTap';
 import MarkerTap from '../../tap/marker/MarkerTap';
 import RouteTap from '../../tap/route/RouteTap';
 
-const SidebarContent = ({ selectedTab, onSearchResults, selectedMarker }) => {
+const SidebarContent = ({
+  selectedTab,
+  onEnableMarkerCreation,
+  onSearchResults,
+  selectedMarker,
+  onPostClick,
+}) => {
   return (
     <div className={Styles.sidebarContent}>
       {selectedTab === '검색' && <SearchTap />}
@@ -15,7 +21,12 @@ const SidebarContent = ({ selectedTab, onSearchResults, selectedMarker }) => {
       {selectedTab === '찜' && <FavTap />}
       {selectedTab === '그룹' && <GroupTap />}
       {selectedTab === '마커' && (
-        <MarkerTap onSearchResults={onSearchResults} selectedMarker={selectedMarker} />
+        <MarkerTap
+          onEnableMarkerCreation={onEnableMarkerCreation}
+          onSearchResults={onSearchResults}
+          selectedMarker={selectedMarker}
+          onPostClick={onPostClick}
+        />
       )}
       {selectedTab === '루트' && <RouteTap />}
     </div>
